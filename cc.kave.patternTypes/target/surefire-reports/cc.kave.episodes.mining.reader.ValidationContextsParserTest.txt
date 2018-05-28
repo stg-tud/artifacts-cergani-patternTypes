@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cc.kave.episodes.mining.reader.ValidationContextsParserTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 sec

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cc.kave.episodes.similarityMetrics.ProposalsSorterTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 4, Time elapsed: 0.007 sec

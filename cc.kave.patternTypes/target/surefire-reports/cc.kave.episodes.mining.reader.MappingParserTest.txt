@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cc.kave.episodes.mining.reader.MappingParserTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec
