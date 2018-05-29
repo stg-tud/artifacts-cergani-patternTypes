@@ -53,7 +53,7 @@ public class run_me {
 		Logger.append("\n");
 		Logger.log("started: %s\n", new Date());
 		
-		load(Preprocessing.class).run(FREQUENCY);
+//		load(Preprocessing.class).run(FREQUENCY);
 		load(ShellComand.class).execute(FREQUENCY, ENTROPY, METHODSIZE); 
 
 		Logger.log("done");

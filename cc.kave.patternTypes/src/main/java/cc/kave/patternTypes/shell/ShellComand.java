@@ -51,19 +51,19 @@ public class ShellComand {
 
 		command = "cd " + rootFolder.getAbsolutePath() + "/n-graph-miner";
 		runCommand(command);
-
-		command = "./n_graph_miner stream.txt " + frequency + " " + entropy
-				+ " " + breaker + " episodes.txt";
-
+		
+		command = "cd " + rootFolder.getAbsolutePath() + "/n-graph-miner\nls";
+		
 		String output = runCommand(command);
-
+		
 		System.out.println(output);
 
-		// ShellComand session = new ShellComand(rootFolder, eventsFolder);
-		//
-		// String output = session.executeCommand(command);
-		//
-		// System.out.println(output);
+//		command = "./n_graph_miner stream.txt " + frequency + " " + entropy
+//				+ " " + breaker + " episodes.txt";
+//
+//		output = runCommand(command);
+//
+//		System.out.println(output);
 	}
 
 	private String runCommand(String command) {
