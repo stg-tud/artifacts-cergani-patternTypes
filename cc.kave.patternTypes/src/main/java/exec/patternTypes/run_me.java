@@ -1,31 +1,97 @@
 /**
- * Copyright 2014 Technische Universität Darmstadt
+ * Copyright 2016 Technische Universität Darmstadt
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package exec.patternTypes;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Properties;
+
+import cc.kave.patternTypes.preprocessing.Preprocessing;
+import cc.kave.patternTypes.shell.ShellComand;
+import cc.recommenders.io.Logger;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class run_me {
 
-	// private static String root = "/Volumes/Data/EpisodeMining/";
-	private static String root = "/Users/ervinacergani/Documents/PhD_work/episode-miner/";
-	private static String dirContexts = root + "EpisodeMining/Contexts-validation/";
-	private static String fileEventStream = root + "eventStream.txt";
-	private static String fileEventMapping = root + "EpisodeMining/EventStreamForEpisodeMining/eventMapping.txt";
+	private static final String PROPERTY_NAME = "episodeFolder";
+	private static final String PROPERTY_FILE = "patternTypes.properties";
 
-	public static void main(String[] args) throws IOException {
-		new DoSomething().run(fileEventStream, fileEventMapping, dirContexts);
+	private static final int FREQUENCY = 200;
+	private static final double ENTROPY = 0.001;
+
+	private static final int FTH = 345;
+	private static final double ETH = 0.23;
+
+	private static final int METHODSIZE = 5000;
+	
+	private static Injector injector;
+
+	public static void main(String[] args) throws Exception {
+		initLogger();
+		printAvailableMemory();
+
+		String rootFolder = readPropertyFromFile(PROPERTY_NAME);
+		injector = Guice.createInjector(new Module(rootFolder));
+
+		Logger.append("\n");
+		Logger.log("started: %s\n", new Date());
+		
+		load(Preprocessing.class).run(FREQUENCY);
+		load(ShellComand.class).execute(FREQUENCY, ENTROPY, METHODSIZE); 
+
+		Logger.log("done");
 	}
+
+	private static void initLogger() {
+		Logger.setPrinting(true);
+		Logger.setDebugging(false);
+		Logger.setCapturing(false);
+	}
+
+	private static void printAvailableMemory() {
+		long maxMem = Runtime.getRuntime().maxMemory();
+		float maxMemInMb = Math.round(maxMem * 1.0d / (1024 * 1024 * 1.0f));
+		Logger.log("maximum memory (-Xmx): %.0f MB", maxMemInMb);
+	}
+
+	private static String readPropertyFromFile(String propertyName) {
+		try {
+			Properties properties = new Properties();
+			properties.load(new FileReader(PROPERTY_FILE));
+			String property = properties.getProperty(propertyName);
+			if (property == null) {
+				throw new RuntimeException("property '" + propertyName
+						+ "' not found in properties file");
+			}
+			Logger.log("%s: %s", propertyName, property);
+
+			return property;
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e.getMessage());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static <T> T load(Class<T> clazz) {
+		return injector.getInstance(clazz);
+	}
+
 }
