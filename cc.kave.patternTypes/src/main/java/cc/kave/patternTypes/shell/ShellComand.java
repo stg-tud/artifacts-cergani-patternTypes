@@ -21,6 +21,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
+import cc.kave.patternTypes.model.EpisodeType;
+import cc.recommenders.io.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -41,29 +44,22 @@ public class ShellComand {
 		this.eventsFolder = ef;
 	}
 
-	public void execute(int frequency, double entropy, int breaker) {
+	public void execute(EpisodeType type, int frequency, double entropy,
+			int breaker) {
 
-		String command = "cp " + eventsFolder.getAbsolutePath();
-		command += "/freq" + frequency + "/stream.txt ";
-		command += rootFolder.getAbsolutePath() + "/n-graph-miner";
-
-		runCommand(command);
-
-		command = "cd " + rootFolder.getAbsolutePath() + "/n-graph-miner";
-		runCommand(command);
+		if (type == EpisodeType.SEQUENTIAL) {
+			entropy = 1.0;
+		} else if (type == EpisodeType.PARALLEL) {
+			entropy = 0.0;
+		}
 		
-		command = "cd " + rootFolder.getAbsolutePath() + "/n-graph-miner\nls";
-		
-		String output = runCommand(command);
-		
-		System.out.println(output);
+		String cmd = getMinerPath() + "/./n_graph_miner "
+				+ getFreqPath(frequency) + "/stream.txt " + frequency + " "
+				+ entropy + " " + breaker + " " + getFreqPath(frequency)
+				+ "/episodes.txt";
 
-//		command = "./n_graph_miner stream.txt " + frequency + " " + entropy
-//				+ " " + breaker + " episodes.txt";
-//
-//		output = runCommand(command);
-//
-//		System.out.println(output);
+		String output = runCommand(cmd);
+		Logger.log("%s", output);
 	}
 
 	private String runCommand(String command) {
@@ -85,5 +81,15 @@ public class ShellComand {
 			e.printStackTrace();
 		}
 		return output.toString();
+	}
+
+	private String getMinerPath() {
+		String path = rootFolder.getAbsolutePath() + "/n-graph-miner";
+		return path;
+	}
+
+	private String getFreqPath(int frequency) {
+		String path = eventsFolder.getAbsolutePath() + "/freq" + frequency;
+		return path;
 	}
 }

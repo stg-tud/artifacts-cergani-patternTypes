@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
-import cc.kave.patternTypes.preprocessing.Preprocessing;
+import cc.kave.patternTypes.mining.evaluation.Expressiveness;
+import cc.kave.patternTypes.model.EpisodeType;
 import cc.kave.patternTypes.shell.ShellComand;
 import cc.recommenders.io.Logger;
 
@@ -33,14 +34,14 @@ public class run_me {
 	private static final String PROPERTY_NAME = "episodeFolder";
 	private static final String PROPERTY_FILE = "patternTypes.properties";
 
-	private static final int FREQUENCY = 200;
+	private static final int FREQUENCY = 300;
 	private static final double ENTROPY = 0.001;
 
 	private static final int FTH = 345;
-	private static final double ETH = 0.23;
+	private static final double ETH = 0.72;
 
 	private static final int METHODSIZE = 5000;
-	
+
 	private static Injector injector;
 
 	public static void main(String[] args) throws Exception {
@@ -52,9 +53,16 @@ public class run_me {
 
 		Logger.append("\n");
 		Logger.log("started: %s\n", new Date());
+
+		//Generating the event stream from SSTs representation
+		// load(Preprocessing.class).run(FREQUENCY);
 		
-//		load(Preprocessing.class).run(FREQUENCY);
-		load(ShellComand.class).execute(FREQUENCY, ENTROPY, METHODSIZE); 
+		// mining episodes using the episode mining algorithm
+		// load(ShellComand.class).execute(EpisodeType.GENERAL, FREQUENCY,
+		// ENTROPY, METHODSIZE);
+		
+		// Running the evluations
+		load(Expressiveness.class).calculate(FREQUENCY, FTH, ETH);
 
 		Logger.log("done");
 	}
