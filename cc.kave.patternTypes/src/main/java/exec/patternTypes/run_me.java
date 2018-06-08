@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
+import cc.kave.patternTypes.mining.evaluation.Consistency;
 import cc.kave.patternTypes.mining.evaluation.Expressiveness;
 import cc.kave.patternTypes.model.EpisodeType;
 import cc.kave.patternTypes.shell.ShellComand;
@@ -54,15 +55,16 @@ public class run_me {
 		Logger.append("\n");
 		Logger.log("started: %s\n", new Date());
 
-		//Generating the event stream from SSTs representation
+		// Generating the event stream from SSTs representation
 		// load(Preprocessing.class).run(FREQUENCY);
-		
+
 		// mining episodes using the episode mining algorithm
 		// load(ShellComand.class).execute(EpisodeType.GENERAL, FREQUENCY,
 		// ENTROPY, METHODSIZE);
-		
+
 		// Running the evluations
-		load(Expressiveness.class).calculate(FREQUENCY, FTH, ETH);
+		// load(Expressiveness.class).calculate(FREQUENCY, FTH, ETH);
+		load(Consistency.class).calculate(FREQUENCY, FTH, ETH);
 
 		Logger.log("done");
 	}
