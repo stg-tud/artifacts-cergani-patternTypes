@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import cc.kave.patternTypes.mining.evaluation.Consistency;
 import cc.kave.patternTypes.mining.evaluation.Expressiveness;
+import cc.kave.patternTypes.mining.evaluation.GeneralizabilityMethods;
 import cc.kave.patternTypes.mining.evaluation.GeneralizabilityRepositories;
 import cc.kave.patternTypes.mining.patterns.ThresholdAnalyzer;
 import cc.kave.patternTypes.model.EpisodeType;
@@ -73,6 +74,7 @@ public class run_me {
 		load(Expressiveness.class).calculate(FREQUENCY, FTH, ETH);
 		load(Consistency.class).calculate(FREQUENCY, FTH, ETH);
 		load(GeneralizabilityRepositories.class).validate(FREQUENCY, FTH, ETH);
+		load(GeneralizabilityMethods.class).validate(FREQUENCY, FTH, ETH);
 
 		Logger.log("done");
 	}
