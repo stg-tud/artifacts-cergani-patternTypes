@@ -49,7 +49,7 @@ import cc.kave.commons.model.naming.codeelements.IMethodName;
 import cc.kave.patternTypes.data.ContextsParser;
 import cc.kave.patternTypes.io.EpisodeParser;
 import cc.kave.patternTypes.io.EventStreamIo;
-import cc.kave.patternTypes.mining.evaluation.GeneralizabilityV2;
+import cc.kave.patternTypes.mining.evaluation.GeneralizabilityMethods;
 import cc.kave.patternTypes.mining.graphs.EpisodeAsGraphWriter;
 import cc.kave.patternTypes.mining.graphs.EpisodeToGraphConverter;
 import cc.kave.patternTypes.mining.patterns.PatternFilter;
@@ -66,7 +66,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-public class GeneralizabilityV2Test {
+public class GeneralizabilityMethodsTest {
 
 	@Rule
 	public TemporaryFolder rootFolder = new TemporaryFolder();
@@ -97,7 +97,7 @@ public class GeneralizabilityV2Test {
 	private static final int FREQUENCY = 2;
 	private static final double ENTROPY = 0.3;
 
-	private GeneralizabilityV2 sut;
+	private GeneralizabilityMethods sut;
 
 	@Before
 	public void setup() throws Exception {
@@ -143,7 +143,7 @@ public class GeneralizabilityV2Test {
 		graph = new DefaultDirectedGraph<Fact, DefaultEdge>(DefaultEdge.class);
 		graphWriter = new EpisodeAsGraphWriter();
 
-		sut = new GeneralizabilityV2(rootFolder.getRoot(), ctxParser,
+		sut = new GeneralizabilityMethods(rootFolder.getRoot(), ctxParser,
 				episodeParser, patternFilter, streamIo, transClosure,
 				graphConverter, graphWriter);
 
@@ -168,7 +168,7 @@ public class GeneralizabilityV2Test {
 	public void cannotBeInitializedWithNonExistingPatternsFolder() {
 		thrown.expect(AssertionException.class);
 		thrown.expectMessage("Patterns folder does not exist!");
-		sut = new GeneralizabilityV2(new File("does not exists"), ctxParser,
+		sut = new GeneralizabilityMethods(new File("does not exists"), ctxParser,
 				episodeParser, patternFilter, streamIo, transClosure,
 				graphConverter, graphWriter);
 	}
@@ -178,7 +178,7 @@ public class GeneralizabilityV2Test {
 		File patternsFile = rootFolder.newFile("a");
 		thrown.expect(AssertionException.class);
 		thrown.expectMessage("Patterns is not a folder, but a file!");
-		sut = new GeneralizabilityV2(patternsFile, ctxParser, episodeParser,
+		sut = new GeneralizabilityMethods(patternsFile, ctxParser, episodeParser,
 				patternFilter, streamIo, transClosure, graphConverter,
 				graphWriter);
 	}

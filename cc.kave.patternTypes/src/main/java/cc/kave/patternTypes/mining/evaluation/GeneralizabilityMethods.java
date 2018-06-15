@@ -51,7 +51,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.name.Named;
 
-public class GeneralizabilityV2 {
+public class GeneralizabilityMethods {
 
 	private File patternFolder;
 
@@ -66,7 +66,7 @@ public class GeneralizabilityV2 {
 	private EpisodeAsGraphWriter graphWriter;
 
 	@Inject
-	public GeneralizabilityV2(@Named("patterns") File folder,
+	public GeneralizabilityMethods(@Named("patterns") File folder,
 			ContextsParser ctxParser, EpisodeParser epParser,
 			PatternFilter pattFilter, EventStreamIo eventsIo,
 			TransClosedEpisodes transClosure,

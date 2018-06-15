@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import cc.kave.commons.model.naming.codeelements.IMethodName;
 import cc.kave.patternTypes.io.EpisodeParser;
 import cc.kave.patternTypes.io.EventStreamIo;
-import cc.kave.patternTypes.model.Averager;
 import cc.kave.patternTypes.model.Episode;
 import cc.kave.patternTypes.model.EpisodeType;
 import cc.kave.patternTypes.model.events.Event;
@@ -38,7 +37,6 @@ import cc.kave.patternTypes.postprocessor.EnclosingMethods;
 import cc.recommenders.datastructures.Tuple;
 import cc.recommenders.io.Logger;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ThresholdAnalyzer {
@@ -57,62 +55,8 @@ public class ThresholdAnalyzer {
 	}
 
 	public void entropy(int frequency) throws Exception {
-		Map<Double, Averager> averager = Maps.newLinkedHashMap();
-		Map<Double, Tuple<Integer, Integer>> minmax = Maps.newLinkedHashMap();
 		Map<Integer, Set<Episode>> episodes = parser.parser(frequency);
-
-		for (double ent = 0.01; ent < 1.1; ent += 0.01) {
-			double entth = Math.round(ent * 100.0) / 100.0;
-			averager.put(entth, new Averager());
-			minmax.put(entth,
-					Tuple.newTuple(Integer.MAX_VALUE, Integer.MIN_VALUE));
-		}
-
-		for (int freq = frequency; freq < (frequency + 100); freq += 5) {
-			Logger.log("\tEntropy\tNumPatterns");
-
-			Map<Integer, Set<Episode>> patterns = filter.filter(
-					EpisodeType.GENERAL, episodes, freq, 0.0);
-			int prev = count(patterns);
-			
-			for (double ent = 0.01; ent < 1.1; ent += 0.01) {
-				double entth = Math.round(ent * 100.0) / 100.0;
-				patterns = filter.filter(EpisodeType.GENERAL, episodes, freq,
-						entth);
-				int counter = count(patterns);
-				int diff = Math.abs(counter - prev);
-
-				averager.get(entth).addValue(diff);
-				int min = minmax.get(entth).getFirst();
-				int max = minmax.get(entth).getSecond();
-
-				if (min > diff) {
-					min = diff;
-				}
-				if (max < diff) {
-					max = diff;
-				}
-				minmax.put(entth, Tuple.newTuple(min, max));
-			}
-		}
-		Logger.log("\n\tEntropy threshold analyses ...");
-		Logger.log("\tEntropy\tAverage\tMin\tMax");
-		for (double ent = 0.01; ent < 1.1; ent += 0.01) {
-			double entth = Math.round(ent * 100.0) / 100.0;
-			Logger.log("\t%.2f\t%.2f\t%d\t%d", entth, averager.get(entth)
-					.average(), minmax.get(entth).getFirst(), minmax.get(entth)
-					.getSecond());
-		}
-	}
-
-	public void EntDim(int frequency) throws Exception {
-		Logger.log("\tEntropy threshold analyses!");
-		printData(frequency, frequency + 100);
-	}
-
-	public void EntFreqDim(int frequency) throws Exception {
-		Map<Integer, Set<Episode>> episodes = parser.parser(frequency);
-		Logger.log("\tFrequency-entropy analyzes!");
+		Logger.log("\tEntropy threshold analyzes!");
 
 		Set<Integer> frequencies = getFrequencies(episodes);
 		int maxFreq = getMax(frequencies);
@@ -120,13 +64,14 @@ public class ThresholdAnalyzer {
 		printData(frequency, maxFreq);
 	}
 
-	public void createHistogram(EpisodeType type, int frequency, double entropy)
+	public void frequency(EpisodeType type, int frequency, double entropy)
 			throws Exception {
 		Map<Integer, Set<Episode>> episodes = parser.parser(frequency);
 		Set<Integer> frequencies = getFrequencies(episodes);
 		int maxFreq = getMax(frequencies);
 
-		Logger.log("\tHistogram for %s-configuration:", type.toString());
+		Logger.log("\tFrequency analyzes for %s-configuration:",
+				type.toString());
 		Logger.log("\tEntropy threshold = %.2f", entropy);
 		Logger.log("\tFrequency\t#Patterns");
 		for (int freq = frequency; freq < maxFreq + 1; freq++) {

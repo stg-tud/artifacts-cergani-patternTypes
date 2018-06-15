@@ -23,7 +23,8 @@ import java.util.Properties;
 
 import cc.kave.patternTypes.mining.evaluation.Consistency;
 import cc.kave.patternTypes.mining.evaluation.Expressiveness;
-import cc.kave.patternTypes.mining.evaluation.Generalizability;
+import cc.kave.patternTypes.mining.evaluation.GeneralizabilityRepositories;
+import cc.kave.patternTypes.mining.patterns.ThresholdAnalyzer;
 import cc.kave.patternTypes.model.EpisodeType;
 import cc.kave.patternTypes.preprocessing.Preprocessing;
 import cc.kave.patternTypes.shell.ShellComand;
@@ -59,6 +60,10 @@ public class run_me {
 
 		// Generating the event stream from SSTs representation
 		load(Preprocessing.class).run(FREQUENCY);
+		
+		//Threshold analyzes: frequency and entropy
+		load(ThresholdAnalyzer.class).entropy(FREQUENCY);
+		load(ThresholdAnalyzer.class).frequency(EpisodeType.GENERAL, FREQUENCY, ETH);
 
 		// mining episodes using the episode mining algorithm
 		load(ShellComand.class).execute(EpisodeType.GENERAL, FREQUENCY,
@@ -67,7 +72,7 @@ public class run_me {
 		// Running the evluations
 		load(Expressiveness.class).calculate(FREQUENCY, FTH, ETH);
 		load(Consistency.class).calculate(FREQUENCY, FTH, ETH);
-		load(Generalizability.class).validate(FREQUENCY, FTH, ETH);
+		load(GeneralizabilityRepositories.class).validate(FREQUENCY, FTH, ETH);
 
 		Logger.log("done");
 	}

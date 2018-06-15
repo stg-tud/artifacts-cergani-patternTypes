@@ -18,11 +18,7 @@ package exec.patternTypes;
 import java.io.File;
 import java.util.Map;
 
-import cc.kave.patternTypes.io.EpisodeParser;
-import cc.kave.patternTypes.io.FileReader;
 import cc.kave.patternTypes.io.ValidationContextsParser;
-import cc.kave.patternTypes.postprocessor.ThresholdsFrequency;
-import cc.kave.patternTypes.statistics.EpisodesStatistics;
 import cc.recommenders.io.Directory;
 
 import com.google.common.collect.Maps;
@@ -70,14 +66,6 @@ public class Module extends AbstractModule {
 
 		Directory vcr = new Directory(contexts.getAbsolutePath());
 		bind(ValidationContextsParser.class).toInstance(new ValidationContextsParser(vcr));
-
-		FileReader reader = new FileReader();
-		EpisodeParser episodeParser = new EpisodeParser(eventsData, reader);
-
-		File patternsRoot = patternsFile;
-		EpisodesStatistics stats = new EpisodesStatistics();
-		bind(ThresholdsFrequency.class).toInstance(new ThresholdsFrequency(patternsRoot, episodeParser, stats));
-
 	}
 
 	private void bindInstances(Map<String, Directory> dirs) {

@@ -39,8 +39,6 @@ import cc.kave.commons.model.naming.Names;
 import cc.kave.commons.model.naming.codeelements.IMethodName;
 import cc.kave.patternTypes.io.EpisodeParser;
 import cc.kave.patternTypes.io.EventStreamIo;
-import cc.kave.patternTypes.mining.patterns.PatternFilter;
-import cc.kave.patternTypes.mining.patterns.ThresholdAnalyzer;
 import cc.kave.patternTypes.model.Episode;
 import cc.kave.patternTypes.model.EpisodeType;
 import cc.kave.patternTypes.model.events.Fact;
@@ -134,22 +132,22 @@ public class ThresholdAnalyzerTest {
 
 	@Test
 	public void oneDim() throws Exception {
-		sut.EntDim(FREQUENCY);
+		sut.entropy(FREQUENCY);
 
-		assertLogContains(0, "\tEntropy threshold analyses!");
+		assertLogContains(0, "\tEntropy threshold analyzes!");
 		assertLogContains(1, "\tFrequency\tEntropy\t#Patterns");
 		assertLogContains(2, "\t2\t0.00\t12");
 
-		verify(parser).parser(anyInt());
-		verify(filter, times(1010)).filter(eq(EpisodeType.GENERAL),
+		verify(parser, times(2)).parser(anyInt());
+		verify(filter, times(101)).filter(eq(EpisodeType.GENERAL),
 				eq(episodes), anyInt(), anyDouble());
 	}
 
 	@Test
 	public void twoDim() throws Exception {
-		sut.EntFreqDim(FREQUENCY);
+		sut.entropy(FREQUENCY);
 
-		assertLogContains(0, "\tFrequency-entropy analyzes!");
+		assertLogContains(0, "\tEntropy threshold analyzes!");
 		assertLogContains(1, "\tFrequency\tEntropy\t#Patterns");
 		assertLogContains(2, "\t2\t0.00\t12");
 
@@ -160,9 +158,9 @@ public class ThresholdAnalyzerTest {
 
 	@Test
 	public void histogram() throws Exception {
-		sut.createHistogram(EpisodeType.GENERAL, FREQUENCY, ENTROPY);
+		sut.frequency(EpisodeType.GENERAL, FREQUENCY, ENTROPY);
 
-		assertLogContains(0, "\tHistogram for GENERAL-configuration:");
+		assertLogContains(0, "\tFrequency analyzes for GENERAL-configuration:");
 		assertLogContains(1, "\tEntropy threshold = 0.5");
 		assertLogContains(2, "\tFrequency\t#Patterns");
 

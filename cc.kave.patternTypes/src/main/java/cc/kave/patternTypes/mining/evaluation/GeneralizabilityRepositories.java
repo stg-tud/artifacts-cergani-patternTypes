@@ -49,7 +49,7 @@ import cc.recommenders.io.Logger;
 import com.google.common.collect.Sets;
 import com.google.inject.name.Named;
 
-public class Generalizability {
+public class GeneralizabilityRepositories {
 
 	private File patternFolder;
 
@@ -63,7 +63,7 @@ public class Generalizability {
 	private EpisodeAsGraphWriter graphWriter;
 
 	@Inject
-	public Generalizability(@Named("patterns") File folder,
+	public GeneralizabilityRepositories(@Named("patterns") File folder,
 			EpisodeParser epParser, PatternFilter pattFilter,
 			EventStreamIo eventsIo, TransClosedEpisodes transClosure,
 			EpisodeToGraphConverter graphConverter,
